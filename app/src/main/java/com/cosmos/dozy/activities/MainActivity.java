@@ -27,7 +27,15 @@ import android.content.Context;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.renderscript.Long2;
 import android.util.Log;
 import android.view.Menu;
@@ -107,6 +115,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     int count_drowsy = 0;
     MediaPlayer beep;
 
+    private boolean alerted = false;
+    private boolean played_ringtone = false;
 
 //    //
 //    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -192,11 +202,10 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         boolean showing_drowsy = SetDrowsy();
         if (showing_drowsy || count_drowsy != 0){
             count_drowsy++;
-            //Play ringtone and vibrate phone
 
-//            Imgproc.putText(mRgba, "ALERT!", new Point(mRgba.size().width/2, mRgba.size().height/2), Core.FONT_HERSHEY_PLAIN, 4, new Scalar(255,255,0),5);
+            Imgproc.putText(mRgba, "ALERT!", new Point(mRgba.size().width/2, mRgba.size().height/2), Core.FONT_HERSHEY_PLAIN, 4, new Scalar(255,255,0),5);
 //            Toast.makeText(this, "DROWSY", Toast.LENGTH_SHORT).show();
-            if (count_drowsy>2){count_drowsy=0;}
+            if (count_drowsy>1){count_drowsy=0;}
         }
 
 
@@ -294,12 +303,16 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             HaarEyeOpen_L = match_eye(templateL_open);
 
             if(!HaarEyeOpen_R && !HaarEyeOpen_L){
+                //Play ringtone and vibrate phone
+                if(!alerted)
+                    alertDriver();
                 Imgproc.putText(mRgba, "Closed", new Point(mRgba.size().width/18, mRgba.size().height/5), Core.FONT_HERSHEY_PLAIN, 2, new Scalar(0,255,0),2);
 //                Toast.makeText(this, "EYES CLOSED", Toast.LENGTH_SHORT).show();
                 FrameEyesClosed++;
                 FrameClosedDrowsy++;
             }
             else if (HaarEyeOpen_R && HaarEyeOpen_L){
+                alerted = false;
                 Imgproc.putText(mRgba, "Open", new Point(mRgba.size().width/18, mRgba.size().height/5), Core.FONT_HERSHEY_PLAIN, 2, new Scalar(0,255,0),2);
 //                Toast.makeText(this, "EYES OPEN", Toast.LENGTH_SHORT).show();
                 FrameEyesOpen++;
@@ -585,5 +598,38 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         mOpenCvCameraView.setCameraIndex(cameraid);
         mOpenCvCameraView.enableFpsMeter();
         mOpenCvCameraView.enableView();
+    }
+    public void alertDriver(){
+        alerted = true;
+        Log.wtf("Driver alert called","yes");
+        try{
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(500);
+            }
+
+            if(!played_ringtone){
+                played_ringtone = true;
+
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                final Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                r.play();
+
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        r.stop();
+                        played_ringtone=false;
+                    }
+                }, 5500);
+
+            }
+
+
+        }catch (Exception e){e.printStackTrace();}
     }
 }
