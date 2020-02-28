@@ -192,7 +192,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         boolean showing_drowsy = SetDrowsy();
         if (showing_drowsy || count_drowsy != 0){
             count_drowsy++;
-            Imgproc.putText(mRgba, "ALERT!", new Point(mRgba.size().width/2, mRgba.size().height/2), Core.FONT_HERSHEY_SCRIPT_COMPLEX, 4, new Scalar(255,255,0),5);
+            //Play ringtone and vibrate phone
+
+//            Imgproc.putText(mRgba, "ALERT!", new Point(mRgba.size().width/2, mRgba.size().height/2), Core.FONT_HERSHEY_PLAIN, 4, new Scalar(255,255,0),5);
 //            Toast.makeText(this, "DROWSY", Toast.LENGTH_SHORT).show();
             if (count_drowsy>2){count_drowsy=0;}
         }
@@ -292,13 +294,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             HaarEyeOpen_L = match_eye(templateL_open);
 
             if(!HaarEyeOpen_R && !HaarEyeOpen_L){
-                Imgproc.putText(mRgba, "Closed", new Point(mRgba.size().width/18, mRgba.size().height/5), Core.FONT_HERSHEY_SCRIPT_COMPLEX, 4, new Scalar(0,255,0),5);
+                Imgproc.putText(mRgba, "Closed", new Point(mRgba.size().width/18, mRgba.size().height/5), Core.FONT_HERSHEY_PLAIN, 2, new Scalar(0,255,0),2);
 //                Toast.makeText(this, "EYES CLOSED", Toast.LENGTH_SHORT).show();
                 FrameEyesClosed++;
                 FrameClosedDrowsy++;
             }
             else if (HaarEyeOpen_R && HaarEyeOpen_L){
-                Imgproc.putText(mRgba, "Open", new Point(mRgba.size().width/18, mRgba.size().height/5), Core.FONT_HERSHEY_SCRIPT_COMPLEX, 4, new Scalar(0,255,0),5);
+                Imgproc.putText(mRgba, "Open", new Point(mRgba.size().width/18, mRgba.size().height/5), Core.FONT_HERSHEY_PLAIN, 2, new Scalar(0,255,0),2);
 //                Toast.makeText(this, "EYES OPEN", Toast.LENGTH_SHORT).show();
                 FrameEyesOpen++;
             }
