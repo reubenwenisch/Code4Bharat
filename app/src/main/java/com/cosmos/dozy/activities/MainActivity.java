@@ -615,6 +615,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             if(!played_ringtone){
                 played_ringtone = true;
 
+                ((AudioManager)getSystemService(Context.AUDIO_SERVICE)).setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 final Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
                 r.play();
