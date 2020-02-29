@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dozy</string>
+    <string name="app_name">Wazey</string>
     <string name="error_cannot_write">Cannot write image captured by camera.</string>
     <string name="error_cannot_open">Cannot open camera.</string>
     <string name="error_cannot_get_permission">Camera permission not available.</string>

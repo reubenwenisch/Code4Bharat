@@ -1,4 +1,4 @@
-package com.cosmos.dozy;
+package com.cosmos.wazey;
 
 import android.app.Application;
 
