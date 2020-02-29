@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/masterWindow" >
+    android:id="@+id/masterWindow"
+    android:orientation="horizontal"
+    android:alpha="0">
 
     <org.opencv.android.JavaCameraView
         android:id="@+id/fd_activity_surface_view"
@@ -31,5 +33,15 @@
         android:onClick="InitTimer"
         android:text="StartTimer"
         android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/stop_tracking"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="Stop tracking"/>
+
 
 </RelativeLayout>
